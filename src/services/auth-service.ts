@@ -11,7 +11,6 @@ class AuthService {
         keep: user.keepCo
       })
       .then(response => {
-        console.log(response.data)
         if (response.data.token) {
           localStorage.setItem('user', response.data.token)
         }

@@ -3,7 +3,7 @@
     <n-form :model="appSettings" style="max-width:90%; margin:auto;">
       <n-list bordered>
         <n-list-item>
-        <n-h1>Paramètres: </n-h1>
+        <n-h1>Paramètres:  {{modelRef.settings.color}}</n-h1>
           <n-list>
             <!-- Item in Categorie -->
             <n-list-item class="list_box">
@@ -15,23 +15,23 @@
                   </n-icon>
                 </n-button>
               </template>
-              <n-thing title="Options de thème" description="Cette feature rencontre quelques problèmes mais elle passe du theme sombre à clair" />
+              <n-thing class="noSelect" title="Options de thème" description="Cette feature rencontre quelques problèmes mais elle passe du theme sombre à clair" />
             </n-list-item>
             <!-- Color primary -->
             <n-list-item class="list_box">
               <template #suffix>
                 <n-form-item path="color" :rule="colorRule">
-                  <n-color-picker class="pickerOption" v-model:value="appSettings.primaryColor" :default-value="appSettings.primaryColor" :show-alpha="true" :modes="['hex']"/>
+                  <n-color-picker class="pickerOption" v-model:value="modelRef.settings.color" :default-value="modelRef.settings.color" :show-alpha="true" :modes="['hex']"/>
                 </n-form-item>
               </template>
-              <n-thing title="Couleur primaire" description="Changer la couleur principal lié aux modules : boutton, champs de textes, etc.." />
+              <n-thing class="noSelect" title="Couleur primaire" description="Changer la couleur principal lié aux modules : boutton, champs de textes, etc.." />
             </n-list-item>
             <!-- app settings -->
             <n-list-item class="list_box" v-if="isElectron">
               <template #suffix>
                 <n-switch v-model:value="active" />
               </template>
-              <n-thing title="Démarrage automatique" description="Lancer l'application au démarrage de windows" />
+              <n-thing class="noSelect" title="Démarrage automatique" description="Lancer l'application au démarrage de windows" />
             </n-list-item>
           </n-list>
         </n-list-item>
@@ -44,7 +44,7 @@
                   <n-input v-model:value="modelRef.email" placeholder="adress@email.com" disabled/>
                 </n-form-item>
               </template>
-              <n-thing title="Adresse email" description="Changer votre adresse email de connexion." />
+              <n-thing class="noSelect" title="Adresse email" description="Changer votre adresse email de connexion." />
             </n-list-item>
             <n-list-item class="list_box">
               <template #suffix>
@@ -52,15 +52,19 @@
                   <n-input v-model:value="modelRef.name" placeholder="Nom d'utilisateur"/>
                 </n-form-item>
               </template>
-              <n-thing title="Nom d'utilisateur" description="Changer votre pseudo." />
+              <n-thing class="noSelect" title="Nom d'utilisateur" description="Changer votre pseudo." />
             </n-list-item>
             <n-list-item class="list_box">
               <template #suffix>
-                <n-form-item path="password" :rule="passwordRule">
-                  <n-input v-model:value="modelRef.password" placeholder="Mot de passe" type="password"/>
-                </n-form-item>
+                <n-space vertical>
+                  <n-input v-model:value="passwordChange" placeholder="Mot de passe" type="text"/>
+                  <n-form-item path="password" label="Confirmer" :rule="confirmPasswordRule" v-if="passwordChange && passwordChange.length >= 8">
+                    <n-input v-model:value="modelRef.password" placeholder="Confirmer mot de passe" type="text"/>
+                  </n-form-item>
+
+                </n-space>
               </template>
-              <n-thing title="Mot de passe" description="Changer votre mot de passe" />
+              <n-thing class="noSelect" title="Mot de passe" description="Changer votre mot de passe. Il doit faire au moins 8 caractères" />
             </n-list-item>
             <n-list-item class="list_box">
               <template #suffix>
@@ -73,7 +77,7 @@
                   <p class="mb-0">size: {{ image.size/1024 }}KB</p> -->
                 </div>
               </template>
-              <n-thing title="Avatar" description="Changer votre avatar." />
+              <n-thing class="noSelect" title="Avatar" description="Changer votre avatar." />
             </n-list-item>
             <n-list-item class="list_box">
               <template #suffix>
@@ -81,7 +85,7 @@
                   <n-button @click="confirmDelete = true" type="error">Supprimer</n-button>
                 </n-form-item>
               </template>
-              <n-thing title="Supression" description="Supprimer le compte utilisateur." />
+              <n-thing class="noSelect" title="Supression" description="Supprimer le compte utilisateur." />
             </n-list-item>
           </n-list>
         </n-list-item>
@@ -92,7 +96,7 @@
       <div id="save_modifications" v-if="mustBeSave">
         <n-card :border="false">
           <div class="save_card">
-            <n-thing class="text_wrapper" :title="$t('utils.save')" :description="$t('utils.save_message')" />
+            <n-thing class="text_wrapper noSelect" :title="$t('utils.save')" :description="$t('utils.save_message')" />
             <n-space class="btn_wrapper">
               <n-button class="resetBtn" text @click="resetChange">{{$t('utils.reset')}}</n-button>
               <n-button type="success" @click="saveParameters">{{$t('utils.save')}}</n-button>
@@ -115,7 +119,7 @@
   </div>
 </template>
 <script>
-import { defineComponent, ref, onMounted, reactive, watchEffect } from 'vue'
+import { defineComponent, ref, onMounted, reactive, watchEffect, computed } from 'vue'
 import { NList, NListItem, NThing, NSwitch, NButton, NSpace, NIcon, NH1, NColorPicker, NForm, NFormItem, useNotification, NInput, NCard, NModal, useMessage } from 'naive-ui'
 import { WeatherSunny24Filled, WeatherMoon24Filled } from '@vicons/fluent'
 import { isElectron } from 'environ'
@@ -160,20 +164,30 @@ export default defineComponent({
     const confirmDelete = ref(false)
     const userId = ref(null)
     const message = useMessage()
+    const passwordChange = ref('')
     const modelRef = ref({
       name: null,
       email: null,
       password: null,
-      avatar: null
+      avatar: null,
+      settings: {
+        color: null
+      }
+    })
+    const dataModified = computed(() => {
+      return Object.keys(modelRef.value).reduce((formData, field) => {
+        if (modelRef.value[field] !== currentUser.value[field]) {
+          formData[field] = modelRef.value[field]
+        }
+        return formData
+      }, {})
     })
     const appSettings = reactive({
-      themeColor: null,
-      primaryColor: null
+      themeColor: null
     })
 
     onMounted(() => {
       appSettings.themeColor = localStorage.theme || 'dark'
-      appSettings.primaryColor = store.state.primaryColor
 
       store.dispatch('user/currentUser').catch(e => {
         console.log(e)
@@ -186,18 +200,17 @@ export default defineComponent({
     })
 
     watchEffect(() => {
-      console.log(`Categorie: ${store.state.user.CIDIsSelected} & project: ${store.state.PIDIsSelected}`)
       currentUser.value = store.state.user.currentUser
       userId.value = store.state.user.currentUser._id
       modelRef.value.name = currentUser.value.name
+      modelRef.value.settings.color = currentUser.value.settings.color
       modelRef.value.email = currentUser.value.email
       preview.value = currentUser.value.avatar
       modelRef.value.avatar = currentUser.value.avatar
-      modelRef.value.password = ''
+      modelRef.value.password = currentUser.value.password
     })
 
     function deleteAccount () {
-      console.log(userId.value)
       if (userId.value) {
         store.dispatch('user/delete', userId.value).then(() => {
           store.dispatch('auth/logout')
@@ -225,7 +238,6 @@ export default defineComponent({
         var reader = new FileReader()
         reader.onload = (e) => {
           this.preview = e.target.result
-          console.log(this.preview)
           modelRef.value.avatar = this.preview
           mustBeSave.value = true
           mustSendAPI.value = true
@@ -244,9 +256,9 @@ export default defineComponent({
     }
 
     function resetChange () {
-      appSettings.primaryColor = store.state.primaryColor
       modelRef.value.name = currentUser.value.name
       modelRef.value.email = currentUser.value.email
+      modelRef.value.settings.color = currentUser.value.settings.color
       preview.value = currentUser.value.avatar
       modelRef.value.avatar = currentUser.value.avatar
       modelRef.value.password = ''
@@ -255,43 +267,38 @@ export default defineComponent({
     }
 
     function saveParameters () {
-      store.dispatch('SAVE_OPTIONS', appSettings.primaryColor)
-      if (mustSendAPI.value) {
-        let data = {}
-        if (modelRef.value.password === '') {
-          data = {
-            user: {
-              email: modelRef.value.email,
-              name: modelRef.value.name,
-              avatar: modelRef.value.avatar
-            },
-            UID: currentUser.value._id
-          }
-        } else {
-          data = {
-            user: modelRef.value,
-            UID: userId.value
-          }
-        }
-        store.dispatch('user/update', data).then(() => {
-          message.success('Le profile a bien été mis à jour.')
-        }).catch((e) => {
-          if (e.response) {
-            console.log(e.response)
-            notification.error({
-              content: 'Erreur',
-              meta: e.response.data.message,
-              duration: 5000
-            })
-          }
-        })
-      } else {
-        message.success('Les options ont bien été mis à jour.')
+      const data = {
+        user: dataModified.value,
+        UID: currentUser.value._id
       }
+      store.dispatch('user/update', data).then(() => {
+        message.success('Le profile a bien été mis à jour.')
+      }).catch((e) => {
+        if (e.response) {
+          console.log(e.response)
+          notification.error({
+            content: 'Erreur',
+            meta: e.response.data.message,
+            duration: 5000
+          })
+        }
+      })
       mustBeSave.value = false
     }
 
+    function validatePasswordSame (rule, value) {
+      if (modelRef.value.password === passwordChange.value) {
+        mustSendAPI.value = true
+        mustBeSave.value = true
+      } else {
+        mustSendAPI.value = false
+        mustBeSave.value = false
+      }
+      return modelRef.value.password === passwordChange.value
+    }
+
     return {
+      passwordChange,
       deleteAccount,
       resetChange,
       confirmDelete,
@@ -307,7 +314,8 @@ export default defineComponent({
       colorRule: {
         trigger: 'change',
         validator (_, value) {
-          if (value !== appSettings.primaryColor) {
+          if (value !== modelRef.value.settings.color) {
+            mustSendAPI.value = true
             mustBeSave.value = true
           }
         }
@@ -321,15 +329,20 @@ export default defineComponent({
           }
         }
       },
-      passwordRule: {
-        trigger: ['change', 'input'],
-        validator (_, value) {
-          if (value !== currentUser.value.password) {
-            mustSendAPI.value = true
-            mustBeSave.value = true
-          }
-        }
+      confirmPasswordRule: {
+        validator: validatePasswordSame,
+        message: 'Non identique',
+        trigger: ['blur', 'password-input', 'change']
       },
+      // passwordRule: {
+      //   trigger: ['change', 'input'],
+      //   validator (_, value) {
+      //     if (value !== currentUser.value.password) {
+      //       mustSendAPI.value = true
+      //       mustBeSave.value = true
+      //     }
+      //   }
+      // },
       active,
       mustBeSave
     }

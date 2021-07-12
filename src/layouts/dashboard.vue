@@ -150,7 +150,7 @@ export default defineComponent({
     }
 
     watchEffect(() => {
-      console.log(`Categorie: ${store.state.CIDIsSelected} & project: ${store.state.PIDIsSelected}`)
+      // console.log(`Categorie: ${store.state.CIDIsSelected} & project: ${store.state.PIDIsSelected}`)
       currentUser.value = store.state.user.currentUser
     })
 

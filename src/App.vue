@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :hljs="hljs" :theme-overrides="themeOverrides" :theme="themeColor === 'light' ? null : globalTheme" :class="themeColor === 'light' ? 'light' : 'dark'">
+  <n-config-provider :hljs="hljs" :theme-overrides="themeOverrides" :theme="theme === 'light' ? null : globalTheme" :class="theme === 'light' ? 'light' : 'dark'">
     <n-global-style />
     <n-notification-provider>
       <n-message-provider>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, watchEffect } from 'vue'
+import { defineComponent, ref, onMounted, watchEffect, computed } from 'vue'
 import hljs from 'highlight.js/lib/core'
 import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NSpin, NNotificationProvider, NMessageProvider } from 'naive-ui'
 import { isElectron } from 'environ'
@@ -56,15 +56,19 @@ export default defineComponent({
   },
   setup () {
     const store = useStore()
-    const themeColor = ref(null)
+    const theme = ref(null)
     const isLoaded = ref(false)
     const globalTheme = ref(darkTheme)
+    const themeColor = ref(null)
+    const loggedIn = computed(() => {
+      return store.state.auth.status.loggedIn
+    })
     const themeOverrides = ref({
       common: {
-        primaryColor: store.state.primaryColor || '#3E7CB1FF',
-        primaryColorHover: store.state.primaryColor || '#2B699FFF',
-        primaryColorPressed: store.state.primaryColor || '#4B88BBFF',
-        primaryColorSuppl: store.state.primaryColor || '#81A4CDFF'
+        primaryColor: null || '#3498db',
+        primaryColorHover: null || '#3498db',
+        primaryColorPressed: null || '#3498db',
+        primaryColorSuppl: null || '#3498db'
       }
     })
     onMounted(() => {
@@ -74,16 +78,20 @@ export default defineComponent({
       }, 2000)
     })
     watchEffect(() => {
-      themeColor.value = store.state.themeColor
-
-      themeOverrides.value.common.primaryColor = store.state.primaryColor
-      themeOverrides.value.common.primaryColorHover = store.state.primaryColor
-      themeOverrides.value.common.primaryColorPressed = store.state.primaryColor
-      themeOverrides.value.common.primaryColorSuppl = store.state.primaryColor
+      theme.value = store.state.themeColor
+      if (loggedIn.value && store.state.user.currentUser) {
+        setTimeout(() => {
+          themeColor.value = store.state.user.currentUser.settings.color
+          themeOverrides.value.common.primaryColor = themeColor.value
+          themeOverrides.value.common.primaryColorHover = themeColor.value
+          themeOverrides.value.common.primaryColorPressed = themeColor.value
+          themeOverrides.value.common.primaryColorSuppl = themeColor.value
+        }, 200)
+      }
     })
     return {
       isLoaded,
-      themeColor,
+      theme,
       themeOverrides,
       globalTheme,
       hljs
@@ -95,6 +103,10 @@ export default defineComponent({
 <style lang="scss">
 @import '@/assets/style/variables.scss';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.9.5/tailwind.min.css';
+
+.noSelect {
+  user-select: none;
+}
 
 .titlebar {
   display: block;

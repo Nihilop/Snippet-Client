@@ -20,7 +20,6 @@ export const user = {
     update ({ dispatch }:any, data:any) {
       return UserService.UpdateUserProfil(data).then(
         (response:any) => {
-          console.log(response.data)
           dispatch('currentUser')
           return Promise.resolve(response.data)
         },

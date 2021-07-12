@@ -23,8 +23,6 @@
 import { ref } from 'vue'
 import { FullScreenMaximize20Regular, FullScreenMinimize24Regular, LineHorizontal120Regular, Dismiss20Regular } from '@vicons/fluent'
 import { isElectron } from 'environ'
-// const electron = window.require && isElectron() ? window.require('electron').remote : null
-// const win = window.require && isElectron() ? electron.getCurrentWindow() : null
 const { remote, ipcRenderer } = window.require ? window.require('electron') : null
 const win = window.require ? remote.getCurrentWindow() : null
 export default {

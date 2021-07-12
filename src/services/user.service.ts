@@ -9,12 +9,10 @@ class UserService {
   }
 
   UpdateUserProfil (data:any) {
-    console.log(data)
     return axios.patch(API_URL + 'update/' + data.UID, data.user, authHeader())
   }
 
   DeleteUserProfil (uid:any) {
-    console.log(uid)
     return axios.delete(API_URL + 'delete/' + uid, authHeader())
   }
 

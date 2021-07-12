@@ -11,8 +11,9 @@
 </template>
 <script>
 import { defineComponent, ref, onMounted, computed, watchEffect } from 'vue'
-import { NPopover } from 'naive-ui'
+import { NPopover, useNotification } from 'naive-ui'
 import { useStore } from 'vuex'
+import router from '@/router'
 import _ from 'lodash'
 export default defineComponent({
   name: 'ListOfProjects',
@@ -22,10 +23,9 @@ export default defineComponent({
   setup () {
     const store = useStore()
     const categories = ref([])
-
+    const notification = useNotification()
     async function selectedCat (CID) {
       store.dispatch('project/CATEGORY_SELECTED', CID)
-      console.log('Categorie: ', CID)
     }
 
     onMounted(() => {
@@ -34,9 +34,20 @@ export default defineComponent({
       }).catch((e) => {
         if (e.response) {
           console.log(e.response)
+          logout()
         }
       })
     })
+
+    function logout () {
+      notification.warning({
+        content: 'Deconnexion réussie',
+        duration: 5000
+      })
+      console.log('deco')
+      store.dispatch('auth/logout')
+      router.push('/login')
+    }
 
     watchEffect(() => {
       categories.value = store.state.project.projects
@@ -65,6 +76,7 @@ export default defineComponent({
     border-radius: 100%;
     text-decoration: none;
     color:inherit;
+    cursor: pointer;
 
     &.router-link-exact-active {
       position:relative;
