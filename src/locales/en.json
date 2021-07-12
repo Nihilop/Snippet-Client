@@ -1,0 +1,40 @@
+{
+  "French": "French",
+  "English": "English",
+  "landing": {
+    "hero": {
+      "title": "Bot propulsed by",
+      "brand": "discordeno",
+      "description": "lorem ipsum",
+      "btn1": "Get started",
+      "btn2": "Invite me !"
+    }
+  },
+  "utils":{
+    "login": "Login",
+    "disconnect": "Disconnect",
+    "settings": "Settings",
+    "profile": "My profile",
+    "loading": "Loading",
+    "reset": "Reset",
+    "save": "Save",
+    "save_message": "You have modified some elements, do you want to save them?"
+  },
+  "dashboard": {
+    "server": {
+      "overview_title": "Welcome message",
+      "welcomeMsg": "Hello and welcome to your server <i>overview</i> page, we have taken care to show you the statistics.",
+      "settings_title": "Global bot configuration"
+    },
+    "menu": {
+      "overview": "Overview",
+      "rank": "Rank",
+      "settings": "Parameters",
+      "welcome": "Welcome",
+      "cmd_custom": "Custom commands",
+      "role_react": "Roles reactions",
+      "moderation": "Moderation",
+      "music":"Music"
+    }
+  }
+}

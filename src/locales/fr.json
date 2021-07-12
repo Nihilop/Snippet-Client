@@ -1,0 +1,40 @@
+{
+  "French": "Français",
+  "English": "Anglais",
+  "landing": {
+    "hero": {
+      "title": "Bot propulsé par",
+      "brand": "discordeno",
+      "description": "lorem ipsum",
+      "btn1": "Commencer",
+      "btn2": "Invite moi !"
+    }
+  },
+  "utils":{
+    "login": "Connexion",
+    "disconnect": "Déconnexion",
+    "settings": "Paramètres",
+    "profile": "Mon profile",
+    "loading": "Chargement",
+    "reset": "Réinitialiser",
+    "save": "Sauvegarder",
+    "save_message": "Vous avez modifié des élements, voulez-vous sauvegarder ?"
+  },
+  "dashboard": {
+    "server": {
+      "overview_title": "Message de Bienvenue",
+      "overview_welcomeMsg": "Bonjour & bienvenue sur votre page <i>Vue d'enssemble</i> de votre serveur, nous avons pris soin de vous afficher les statistiques.",
+      "settings_title": "Configuration globale du bot"
+    },
+    "menu": {
+      "overview": "Vue d'enssemble",
+      "rank": "Classement",
+      "settings": "Réglages",
+      "welcome": "Bienvenue",
+      "cmd_custom": "Commandes personnalisées",
+      "role_react": "Rôles réactions",
+      "moderation": "Modération",
+      "music":"Musique"
+    }
+  }
+}
