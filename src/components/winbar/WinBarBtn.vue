@@ -22,9 +22,10 @@
 <script>
 import { ref } from 'vue'
 import { FullScreenMaximize20Regular, FullScreenMinimize24Regular, LineHorizontal120Regular, Dismiss20Regular } from '@vicons/fluent'
-import { isElectron } from 'environ'
+
 const { remote, ipcRenderer } = window.require ? window.require('electron') : null
 const win = window.require ? remote.getCurrentWindow() : null
+
 export default {
   name: 'WinBarBtn',
   components: {
@@ -37,25 +38,19 @@ export default {
     const fullscreen = ref(null)
 
     function onClose () {
-      if (isElectron()) {
-        ipcRenderer.send('close')
-      }
+      ipcRenderer.send('close')
     }
 
     function onMinimize () {
-      if (isElectron()) {
-        ipcRenderer.send('min')
-      }
+      ipcRenderer.send('min')
     }
 
     function onMaximize () {
-      if (isElectron()) {
-        ipcRenderer.send('max')
-        if (win.isMaximized()) {
-          this.fullscreen = true
-        } else {
-          this.fullscreen = false
-        }
+      ipcRenderer.send('max')
+      if (win.isMaximized()) {
+        this.fullscreen = true
+      } else {
+        this.fullscreen = false
       }
     }
     return {

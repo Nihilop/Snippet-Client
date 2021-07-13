@@ -90,6 +90,9 @@ export const project = {
         }
       )
     },
+    CID_SELECT (context: any) {
+      context.state.CIDIsSelected = false
+    },
     RESET_ALL (context:any) {
       context.commit('RESET')
     }

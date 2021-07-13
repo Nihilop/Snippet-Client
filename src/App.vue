@@ -3,13 +3,13 @@
     <n-global-style />
     <n-notification-provider>
       <n-message-provider>
-        <n-layout-header class="titlebar" position="absolute" style="width:100%;" height="28px" v-if="isElectron">
-          <win-bar title="App" />
+        <n-layout-header class="titlebar" position="absolute" style="width:100%;" height="28px" v-if="isApp">
+          <component :is="winBar" title="App" v-if="isApp"/>
         </n-layout-header>
         <div class="loader" v-if="!isLoaded">
           <n-spin class="spinner" size="large" />
         </div>
-        <n-layout position="absolute" class="default_container" content-style="min-height:100%" :style="isElectron ? 'top:28px' : null" :native-scrollbar="false" v-if="isLoaded">
+        <n-layout position="absolute" class="default_container" content-style="min-height:100%" :style="isApp ? 'top:28px' : null" :native-scrollbar="false" v-if="isLoaded">
           <router-view />
         </n-layout>
       </n-message-provider>
@@ -18,15 +18,14 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, watchEffect, computed } from 'vue'
+import { defineComponent, ref, onMounted, watchEffect, computed, defineAsyncComponent } from 'vue'
 import hljs from 'highlight.js/lib/core'
 import { darkTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutHeader, NSpin, NNotificationProvider, NMessageProvider } from 'naive-ui'
-import { isElectron } from 'environ'
-import winBar from '@/components/winbar/WinBar'
+// import winBar from '@/components/winbar/WinBar'
 import { useStore } from 'vuex'
-
+import { isElectron } from 'environ'
 import javascript from 'highlight.js/lib/languages/javascript'
-
+const isApp = ref(isElectron())
 hljs.registerLanguage('javascript', javascript)
 
 export default defineComponent({
@@ -37,21 +36,13 @@ export default defineComponent({
     NLayout,
     NSpin,
     NNotificationProvider,
-    NMessageProvider,
-    winBar
+    NMessageProvider
   },
-  data () {
-    return {
-      isElectron: null
-    }
-  },
-  created () {
-    // Sans doute en faire une global var pour pouvoir utiliser cette condition partout dans l'app avec $isElectron
-    this.isElectron = isElectron()
-    if (isElectron()) {
-      document.body.classList.add('application')
-    } else {
-      document.body.classList.add('browser')
+  computed: {
+    winBar () {
+      return defineAsyncComponent(() =>
+        import('@/components/winbar/WinBar.vue')
+      )
     }
   },
   setup () {
@@ -76,6 +67,12 @@ export default defineComponent({
       setTimeout(() => {
         isLoaded.value = true
       }, 2000)
+      if (isApp.value) {
+        document.body.classList.add('application')
+      } else {
+        document.body.classList.add('browser')
+      }
+      console.log(isApp.value)
     })
     watchEffect(() => {
       theme.value = store.state.themeColor
@@ -90,6 +87,7 @@ export default defineComponent({
       }
     })
     return {
+      isApp,
       isLoaded,
       theme,
       themeOverrides,

@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+// const API_URL = 'http://localhost:4000/v1/'
 const API_URL = 'https://api.nihilo.fr/v1/'
 
 class AuthService {

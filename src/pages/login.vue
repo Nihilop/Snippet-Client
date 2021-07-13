@@ -18,7 +18,7 @@
       </n-form-item>
       <n-space vertical>
         <n-checkbox v-model:checked="model.keepCo">Rester connecter ?</n-checkbox>
-        <n-button class="w-full mb-5" type="primary" @click="handleValidateButtonClick">Connexion</n-button>
+        <n-button class="w-full mb-5" type="primary" :disabled="btnDisabled" @click="handleValidateButtonClick">Connexion</n-button>
       </n-space>
     </n-form>
     <footer>
@@ -52,6 +52,7 @@ export default defineComponent({
     const loading = ref(false)
     const rPasswordFormItemRef = ref(null)
     const notification = useNotification()
+    const btnDisabled = ref(false)
     const loggedIn = computed(() => {
       return store.state.auth.status.loggedIn
     })
@@ -69,6 +70,7 @@ export default defineComponent({
 
     function connectAPI () {
       loading.value = true
+      btnDisabled.value = true
       store.dispatch('auth/login', modelRef.value).then(
         () => {
           notification.success({
@@ -81,6 +83,7 @@ export default defineComponent({
         }
       ).catch(e => {
         if (e.response) {
+          btnDisabled.value = false
           console.log(e.response.data.message)
           notification.error({
             title: e.response.data.message || 'Serveur offline',
@@ -90,6 +93,7 @@ export default defineComponent({
       })
     }
     return {
+      btnDisabled,
       formRef,
       connectAPI,
       loggedIn,

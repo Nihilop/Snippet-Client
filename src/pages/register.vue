@@ -31,7 +31,7 @@
           placeholder="Répétez Mot de passe"
         />
       </n-form-item>
-      <n-button :disabled="model.reenteredPassword === null" class="w-full mb-5" type="primary" @click="handleValidateButtonClick">S'inscrire</n-button>
+      <n-button :disabled="model.reenteredPassword === null || btnDisabled" class="w-full mb-5" type="primary" @click="handleValidateButtonClick">S'inscrire</n-button>
     </n-form>
     <footer>
       <n-divider class="text-sm" title-placement="center">ou</n-divider>
@@ -63,6 +63,7 @@ export default defineComponent({
     const rPasswordFormItemRef = ref(null)
     const notification = useNotification()
     const nbCaractere = ref(8)
+    const btnDisabled = ref(false)
     const modelRef = ref({
       email: null,
       name: null,
@@ -90,6 +91,7 @@ export default defineComponent({
     })
 
     function createUserAccount () {
+      btnDisabled.value = true
       const data = { name: modelRef.value.name, email: modelRef.value.email, password: modelRef.value.reenteredPassword }
       store.dispatch('auth/register', data).then(
         (data) => {
@@ -105,6 +107,7 @@ export default defineComponent({
           }, 1000)
         }).catch(e => {
         if (e.response) {
+          btnDisabled.value = false
           console.log(e.response.data.message)
           notification.error({
             title: e.response.data.message,
@@ -125,6 +128,7 @@ export default defineComponent({
       return value === modelRef.value.password
     }
     return {
+      btnDisabled,
       nbCaractere,
       emailAutocomplete,
       createUserAccount,

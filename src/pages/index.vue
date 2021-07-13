@@ -42,7 +42,8 @@
           </template>
           <template #description> Date: {{ new Date(project.created_at * 1000 ).toLocaleString() }} </template>
           <div style="padding:24px; box-sizing:border-box;">
-            {{ project.description }}
+            <Markdown :source="project.description" />
+            <!-- project.description -->
           </div>
         </n-thing>
         <div class="codePreview">
@@ -136,7 +137,10 @@ import { highlight, languages } from 'prismjs/components/prism-core'
 import 'prismjs/components/prism-clike'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/themes/prism-tomorrow.css'
-const { shell } = require('electron')
+import { isElectron } from 'environ'
+import { Delta } from '@vueup/vue-quill'
+const isApp = ref(isElectron())
+
 export default {
   name: 'home',
   layout: 'dashboard',
@@ -186,7 +190,12 @@ export default {
     }
 
     function openShare (id) {
-      shell.openExternal(`https://api.nihilo.fr/share/${id}`)
+      if (isApp.value) {
+        const { shell } = require('electron')
+        shell.openExternal(`https://api.nihilo.fr/share/${id}`)
+      } else {
+        window.open(`https://api.nihilo.fr/share/${id}`, '_blank')
+      }
     }
 
     function updateVisibility () {

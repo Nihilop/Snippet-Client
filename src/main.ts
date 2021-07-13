@@ -5,7 +5,9 @@ import store from './store'
 import { createI18n } from 'vue-i18n'
 import 'vfonts/Lato.css'
 import 'vfonts/FiraCode.css'
-// import CountryFlag from 'vue-country-flag-next'
+import Markdown from 'vue3-markdown-it'
+import 'highlight.js/styles/monokai.css'
+import CountryFlag from 'vue-country-flag-next'
 
 const french = require('./locales/fr.json')
 const english = require('./locales/en.json')
@@ -25,5 +27,6 @@ const app = createApp(App)
 app.use(store)
 app.use(router)
 app.use(i18n)
-// app.component('country-flag', CountryFlag)
+app.component('Markdown', Markdown)
+app.component('country-flag', CountryFlag)
 app.mount('#app')

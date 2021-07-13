@@ -1,6 +1,12 @@
 <template>
   <header class="header_bar">
     <div class="user_container">
+      <n-button text v-if="currentUser.admin">
+        <template #icon>
+          <ShieldCheckmark48Regular />
+        </template>
+        Administration
+      </n-button>
       <n-dropdown @select="userOptionSelect" trigger="click" :options="userOptions" placement="bottom-end">
         <n-button text>
           <template #icon>
@@ -56,7 +62,7 @@
   <!-- modals ? -->
   <n-modal v-model:show="settingsModal" :mask-closable="false" >
     <n-layout :native-scrollbar="false" style="width:100vw; height:100vh" content-style="min-height:100vh;">
-      <n-card style="display:block; min-height:100vh; padding-top:55px;" title="Paramètres de l'application" :bordered="false" :native-scrollbar="false" >
+      <n-card style="display:block; min-height:100vh; padding-top:55px;" title=" " :bordered="false" :native-scrollbar="false" >
         <template #header-extra><n-button class="modalClose" text @click="settingsModal = false"><n-icon :size="35"><Dismiss20Regular /></n-icon></n-button></template>
         <settings-content />
         <!-- <template #footer> Footer </template> -->
@@ -77,7 +83,7 @@
 <script>
 import { defineComponent, ref, onMounted, watchEffect } from 'vue'
 import { NLayout, NLayoutSider, NButton, NIcon, NModal, NCard, NAvatar, NDropdown, useNotification } from 'naive-ui'
-import { Dismiss20Regular, Add24Regular, Settings28Filled } from '@vicons/fluent'
+import { Dismiss20Regular, Add24Regular, Settings28Filled, ShieldCheckmark48Regular } from '@vicons/fluent'
 import { useStore } from 'vuex'
 import router from '@/router'
 // import { useI18n } from 'vue-i18n'
@@ -105,7 +111,8 @@ export default defineComponent({
     // Icons:
     Dismiss20Regular,
     Add24Regular,
-    Settings28Filled
+    Settings28Filled,
+    ShieldCheckmark48Regular
   },
   setup () {
     // Options for electron titlebar

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import authHeader from './auth-header'
 
+// const API_URL = 'http://localhost:4000/api/'
 const API_URL = 'https://api.nihilo.fr/api/'
 
 class UserService {
@@ -9,6 +10,7 @@ class UserService {
   }
 
   UpdateUserProfil (data:any) {
+    console.log(data)
     return axios.patch(API_URL + 'update/' + data.UID, data.user, authHeader())
   }
 

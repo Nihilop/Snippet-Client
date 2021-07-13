@@ -14,6 +14,8 @@
         <n-form-item path="description" label="Description">
           <n-input type="textarea" v-model:value="modelRef.description" placeholder="Description du projet..." />
         </n-form-item>
+        <p>Markdown preview : </p>
+        <Markdown class="mardown_preview" :source="modelRef.description" />
         <n-list bordered>
           <template #footer>
             <n-button type="success" @click="addBlockCode">
@@ -27,7 +29,7 @@
           <n-list-item v-for="(code, index) in modelRef.code" :key="index">
             <n-thing>
               <template #header-extra>
-                <n-button type="error" @click="deleteRow(index)">
+                <n-button text @click="deleteRow(index)">
                   <template #icon>
                     <n-icon>
                       <Delete20Regular />
@@ -115,7 +117,7 @@ export default defineComponent({
     const modelRef = ref({
       name: null,
       category: null,
-      description: null,
+      description: '',
       code: [{
         file: null,
         code: null,
@@ -251,6 +253,13 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 @import '@/assets/style/variables.scss';
+.mardown_preview {
+  background: $secondary;
+  border-radius: 10px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
 .addProject {
   max-width:80%;
   margin:auto;

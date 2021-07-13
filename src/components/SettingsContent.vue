@@ -3,7 +3,7 @@
     <n-form :model="appSettings" style="max-width:90%; margin:auto;">
       <n-list bordered>
         <n-list-item>
-        <n-h1>Paramètres:  {{modelRef.settings.color}}</n-h1>
+        <n-h1>Paramètres: </n-h1>
           <n-list>
             <!-- Item in Categorie -->
             <n-list-item class="list_box">
@@ -203,7 +203,7 @@ export default defineComponent({
       currentUser.value = store.state.user.currentUser
       userId.value = store.state.user.currentUser._id
       modelRef.value.name = currentUser.value.name
-      modelRef.value.settings.color = currentUser.value.settings.color
+      modelRef.value.settings.color = currentUser.value.settings.color || '#3498db'
       modelRef.value.email = currentUser.value.email
       preview.value = currentUser.value.avatar
       modelRef.value.avatar = currentUser.value.avatar
