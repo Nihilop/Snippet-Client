@@ -1,8 +1,17 @@
 import axios from 'axios'
 import authHeader from './auth-header'
 
-// const API_URL = 'http://localhost:4000/api/'
-const API_URL = 'https://api.nihilo.fr/api/'
+const DEV_MODE = process.env.NODE_ENV !== 'production'
+let API_URL = ''
+let SHARE_URL = ''
+
+if (DEV_MODE) {
+  API_URL = 'http://localhost:4000/api/'
+  SHARE_URL = 'http://localhost:8080/'
+} else {
+  API_URL = 'https://api.nihilo.fr/api/'
+  SHARE_URL = 'https://api.nihilo.fr/'
+}
 
 class ProjectService {
   getAllProjects () {
@@ -11,6 +20,10 @@ class ProjectService {
 
   getProject (pid: any) {
     return axios.get(API_URL + 'project/' + pid, authHeader())
+  }
+
+  getProjectPublic (pid: any) {
+    return axios.get(SHARE_URL + 'share/' + pid)
   }
 
   createProject (data:any) {

@@ -1,20 +1,33 @@
 <template>
   <header class="header_bar">
+    <transition name="drop-top">
+      <div class="download_app" v-if="!isApp && appDlShow">
+        <n-icon :size="22" style="margin:0 5px">
+          <ArrowDownload24Regular/>
+        </n-icon>
+        <a href="/download/latest/client_app Setup 0.1.0.exe">{{ $t('global.info_download') }}</a>
+        <n-icon :size="18" style="margin: auto auto auto 50px" @click="dismissAppDownload">
+          <Dismiss20Regular />
+        </n-icon>
+      </div>
+    </transition>
     <div class="user_container">
-      <n-button text v-if="currentUser.admin">
-        <template #icon>
-          <ShieldCheckmark48Regular />
-        </template>
-        Administration
-      </n-button>
-      <n-dropdown @select="userOptionSelect" trigger="click" :options="userOptions" placement="bottom-end">
-        <n-button text>
+      <n-space>
+        <n-button text v-if="currentUser.admin" @click="goAdminPage">
           <template #icon>
-            <n-avatar style="height:auto;" :src="currentUser.avatar"></n-avatar>
+            <ShieldCheckmark48Regular />
           </template>
-          {{ currentUser.name }} <!-- <span class="status" :style="online ? 'background:green' : 'background:red'"></span> -->
+          Administration
         </n-button>
-      </n-dropdown>
+        <n-dropdown @select="userOptionSelect" trigger="click" :options="userOptions" placement="bottom-end">
+          <n-button text>
+            <template #icon>
+              <n-avatar style="height:auto;" :src="currentUser.avatar"></n-avatar>
+            </template>
+            {{ currentUser.name }} <!-- <span class="status" :style="online ? 'background:green' : 'background:red'"></span> -->
+          </n-button>
+        </n-dropdown>
+      </n-space>
     </div>
   </header>
   <n-layout has-sider position="absolute" style="top: 40px">
@@ -38,17 +51,12 @@
     <n-layout has-sider position="absolute" style="left:85px;">
       <transition name="drop-right">
         <n-layout-sider
-          v-if="$store.state.project.CIDIsSelected && $route.name === 'index'"
+          v-if="$store.state.project.CIDIsSelected"
           class="sidebarL_options glass"
           :class="windowsWidth <= 380 && $store.state.project.CIDIsSelected ? 'menu--open_mobile' : null"
           :width="windowsWidth <= 380 ? '100%' : 280">
           <!-- sidebar + -->
           <projects-list />
-          <n-button class="addDoc" v-if="$store.state.project.CIDIsSelected" @click="modalAdd = !modalAdd" type="primary">
-            <n-icon>
-              <Add24Regular />
-            </n-icon>
-          </n-button>
         </n-layout-sider>
       </transition>
 
@@ -70,35 +78,26 @@
     </n-layout>
   </n-modal>
 
-  <n-modal v-model:show="modalAdd" :mask-closable="false" >
-    <n-layout :native-scrollbar="false" style="width:100vw; height:100vh" content-style="min-height:100vh;">
-      <n-card style="display:block; min-height:100vh; padding-top:55px;" title=" " :bordered="false" :native-scrollbar="false" >
-        <template #header-extra><n-button class="modalClose" text @click="modalAdd = false"><n-icon :size="35"><Dismiss20Regular /></n-icon></n-button></template>
-        <AddProject @showUpdate="modalClose"/>
-      </n-card>
-    </n-layout>
-  </n-modal>
-
 </template>
 <script>
 import { defineComponent, ref, onMounted, watchEffect } from 'vue'
-import { NLayout, NLayoutSider, NButton, NIcon, NModal, NCard, NAvatar, NDropdown, useNotification } from 'naive-ui'
-import { Dismiss20Regular, Add24Regular, Settings28Filled, ShieldCheckmark48Regular } from '@vicons/fluent'
+import { NLayout, NLayoutSider, NButton, NIcon, NModal, NCard, NAvatar, NDropdown, useNotification, NSpace } from 'naive-ui'
+import { Dismiss20Regular, Settings28Filled, ShieldCheckmark48Regular, ArrowDownload24Regular } from '@vicons/fluent'
 import { useStore } from 'vuex'
 import router from '@/router'
-// import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 // Component
 import SettingsContent from '@/components/SettingsContent.vue'
 import ProjectsList from '@/components/ProjectsList.vue'
 import CategorySidebar from '@/components/CategorySidebar.vue'
-import AddProject from '@/components/AddProject.vue'
+import { isElectron } from 'environ'
+const isApp = ref(isElectron())
 export default defineComponent({
   components: {
     // Components:
     SettingsContent,
     ProjectsList,
     CategorySidebar,
-    AddProject,
     // NaiveUI:
     NLayout,
     NLayoutSider,
@@ -108,27 +107,33 @@ export default defineComponent({
     NCard,
     NAvatar,
     NDropdown,
+    NSpace,
     // Icons:
     Dismiss20Regular,
-    Add24Regular,
     Settings28Filled,
-    ShieldCheckmark48Regular
+    ShieldCheckmark48Regular,
+    ArrowDownload24Regular
   },
   setup () {
     // Options for electron titlebar
     const store = useStore()
     const settingsModal = ref(false)
-    const modalAdd = ref(false)
     const currentUser = ref(null)
+    const appDlShow = ref(true)
     const windowsWidth = ref(window.innerWidth)
     const notification = useNotification()
+    const { t } = useI18n({ useScope: 'global' })
+    const dropdownUserOptions = ref({
+      settings: t('utils.parameters'),
+      disconnect: t('utils.disconnect')
+    })
     onMounted(() => {
       window.onresize = () => { windowsWidth.value = window.innerWidth }
       store.dispatch('user/currentUser').catch(e => {
         console.log(e)
       })
       setTimeout(() => {
-        if (currentUser.value.name === null || currentUser.value.name === undefined) {
+        if (!currentUser.value || currentUser.value === null || currentUser.value === undefined) {
           notification.error({
             content: 'API Error',
             meta: "Nous ne parvenons pas à trouver vos informations.. vous allez être redirigé à la page d'authentification dans 2 secondes",
@@ -138,7 +143,7 @@ export default defineComponent({
             logout()
           }, 2000)
         }
-      }, 500)
+      }, 1000)
     })
 
     function logout () {
@@ -151,9 +156,13 @@ export default defineComponent({
       router.push('/login')
     }
 
-    function modalClose () {
-      console.log('recu !')
-      modalAdd.value = false
+    function goAdminPage () {
+      router.push('/admin')
+      store.dispatch('project/RESET_ALL')
+    }
+
+    function dismissAppDownload () {
+      appDlShow.value = false
     }
 
     watchEffect(() => {
@@ -162,11 +171,13 @@ export default defineComponent({
     })
 
     return {
-      modalClose,
+      goAdminPage,
+      dismissAppDownload,
+      appDlShow,
+      isApp,
       windowsWidth,
       settingsModal,
       currentUser,
-      modalAdd,
       online: true,
       userOptions: [
         {
@@ -174,7 +185,7 @@ export default defineComponent({
           key: 1
         },
         {
-          label: 'Paramètres',
+          label: dropdownUserOptions.value.settings,
           key: 2
         },
         {
@@ -182,7 +193,7 @@ export default defineComponent({
           key: 'divier'
         },
         {
-          label: 'Déconnection',
+          label: dropdownUserOptions.value.disconnect,
           key: 'disconnect'
         }
       ],
@@ -236,6 +247,16 @@ export default defineComponent({
     height: 40px;
     display: flex;
     vertical-align: middle;
+    .download_app {
+      margin:auto auto auto 3% ;
+      display: flex;
+      background: #f1c40f;
+      padding: 8px 24px;
+      box-sizing: border-box;
+      border-radius: 5px;
+      border: 1px solid #e67e22;
+      color: #34495e
+    }
     .user_container {
       margin:auto 3% auto auto;
       display: flex;
@@ -256,14 +277,6 @@ export default defineComponent({
   .modalClose {
     position:fixed;
     right: 2%
-  }
-  .addDoc {
-    position:fixed;
-    bottom: 20px;
-    right: 10%;
-    width:40px;
-    height:40px;
-    border-radius:50%;
   }
 
   .browser {

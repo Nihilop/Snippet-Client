@@ -1,4 +1,14 @@
 <template>
+  <n-popover :overlap="false" placement="right" trigger="hover">
+    <template #trigger>
+      <router-link class="PIDLink" exact to='/' @click="resetData">
+        <n-icon :size="22" style="margin:auto;">
+          <Home28Filled />
+        </n-icon>
+      </router-link>
+    </template>
+    <div class="large-text"> {{ $t('utils.home') }}</div>
+  </n-popover>
   <n-popover :overlap="false" placement="right" trigger="hover" v-for="(PID, index) in catComputed" :key="index">
     <template #trigger>
       <a class="PIDLink" exact @click="selectedCat(PID[0].category)">
@@ -8,36 +18,69 @@
     </template>
     <div class="large-text">{{PID[0].category}}</div>
   </n-popover>
+  <n-popover :overlap="false" placement="right" trigger="hover">
+    <template #trigger>
+      <n-button class="PIDLink" @click="modalAdd = !modalAdd" type="primary">
+        <n-icon>
+          <Add24Regular />
+        </n-icon>
+      </n-button>
+    </template>
+    <div class="large-text"> {{ $t('utils.create') }} {{$t('utils.project') }}</div>
+  </n-popover>
+
+  <n-modal v-model:show="modalAdd" :mask-closable="false" >
+    <n-layout :native-scrollbar="false" style="width:100vw; height:100vh" content-style="min-height:100vh;">
+      <n-card style="display:block; min-height:100vh; padding-top:55px;" title=" " :bordered="false" :native-scrollbar="false" >
+        <template #header-extra><n-button class="modalClose" text @click="modalAdd = false"><n-icon :size="35"><Dismiss20Regular /></n-icon></n-button></template>
+        <AddProject @showUpdate="modalClose"/>
+      </n-card>
+    </n-layout>
+  </n-modal>
 </template>
 <script>
 import { defineComponent, ref, onMounted, computed, watchEffect } from 'vue'
-import { NPopover, useNotification } from 'naive-ui'
+import { NPopover, useNotification, NIcon, NButton, NModal, NCard, NLayout } from 'naive-ui'
+import AddProject from '@/components/AddProject.vue'
+import { Home28Filled, Add24Regular, Dismiss20Regular } from '@vicons/fluent'
 import { useStore } from 'vuex'
 import router from '@/router'
 import _ from 'lodash'
 export default defineComponent({
   name: 'ListOfProjects',
   components: {
-    NPopover
+    AddProject,
+    NPopover,
+    NIcon,
+    Home28Filled,
+    NButton,
+    Add24Regular,
+    Dismiss20Regular,
+    NModal,
+    NCard,
+    NLayout
   },
   setup () {
     const store = useStore()
     const categories = ref([])
+    const modalAdd = ref(false)
     const notification = useNotification()
-    async function selectedCat (CID) {
+
+    function selectedCat (CID) {
       store.dispatch('project/CATEGORY_SELECTED', CID)
     }
 
-    onMounted(() => {
-      store.dispatch('project/ALL_PROJECTS').then((data) => {
-        categories.value = data.data
-      }).catch((e) => {
-        if (e.response) {
-          console.log(e.response)
-          logout()
-        }
-      })
+    function modalClose () {
+      modalAdd.value = false
+    }
+
+    onMounted(async () => {
+      await store.dispatch('project/ALL_PROJECTS')
     })
+
+    function resetData () {
+      store.dispatch('project/RESET_ALL')
+    }
 
     function logout () {
       notification.warning({
@@ -58,6 +101,9 @@ export default defineComponent({
     })
 
     return {
+      modalClose,
+      modalAdd,
+      resetData,
       selectedCat,
       catComputed
     }
@@ -100,5 +146,11 @@ export default defineComponent({
       border-radius: 100%;
       margin:auto;
     }
+  }
+  .addDoc {
+    position:relative;
+    width:40px;
+    height:40px;
+    border-radius:50%;
   }
 </style>

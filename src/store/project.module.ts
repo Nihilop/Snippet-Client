@@ -5,12 +5,13 @@ export const project = {
     projects: [],
     categories: [],
     cateSelected: '',
+    shareProject: {},
     project: {},
     PIDIsSelected: false,
     CIDIsSelected: false
   },
   actions: {
-    ALL_PROJECTS (context:any) {
+    async ALL_PROJECTS (context:any) {
       return ProjectService.getAllProjects().then(
         (response:any) => {
           context.commit('ALL_PROJECT_SUCCESS', response.data.data)
@@ -90,6 +91,17 @@ export const project = {
         }
       )
     },
+    GET_PUBLIC_PROJECT (context:any, payload:any) {
+      return ProjectService.getProjectPublic(payload).then(
+        (response:any) => {
+          context.commit('SAVE_SHARE_PROJECT', response.data.data)
+          return Promise.resolve(response.data.data)
+        },
+        (error:any) => {
+          return Promise.reject(error)
+        }
+      )
+    },
     CID_SELECT (context: any) {
       context.state.CIDIsSelected = false
     },
@@ -122,6 +134,9 @@ export const project = {
       setTimeout(() => {
         state.CIDIsSelected = true
       }, 200)
+    },
+    SAVE_SHARE_PROJECT (state:any, payload:any) {
+      state.shareProject = payload
     },
     RESET (state:any) {
       state.CIDIsSelected = false

@@ -1,16 +1,8 @@
 {
-  "French": "French",
-  "English": "English",
-  "landing": {
-    "hero": {
-      "title": "Bot propulsed by",
-      "brand": "discordeno",
-      "description": "lorem ipsum",
-      "btn1": "Get started",
-      "btn2": "Invite me !"
-    }
-  },
+  "fr": "French",
+  "en": "English",
   "utils":{
+    "home": "Home",
     "login": "Login",
     "disconnect": "Disconnect",
     "settings": "Settings",
@@ -18,23 +10,64 @@
     "loading": "Loading",
     "reset": "Reset",
     "save": "Save",
-    "save_message": "You have modified some elements, do you want to save them?"
+    "delete": "Delete",
+    "save_message": "You have modified some elements, do you want to save them?",
+    "download": "Download",
+    "create": "Create",
+    "close": "Close",
+    "close_unsave": "Close without save",
+    "private": "Private",
+    "public": "Public",
+    "project": "Project",
+    "username": "Username",
+    "password": "Password",
+    "confirm": "Confirm ",
+    "parameters": "Parameters"
   },
-  "dashboard": {
-    "server": {
-      "overview_title": "Welcome message",
-      "welcomeMsg": "Hello and welcome to your server <i>overview</i> page, we have taken care to show you the statistics.",
-      "settings_title": "Global bot configuration"
-    },
-    "menu": {
-      "overview": "Overview",
-      "rank": "Rank",
-      "settings": "Parameters",
-      "welcome": "Welcome",
-      "cmd_custom": "Custom commands",
-      "role_react": "Roles reactions",
-      "moderation": "Moderation",
-      "music":"Music"
+  "global": {
+    "info_download": "Download the desktop version !"
+  },
+  "options": {
+    "theme_title": "Theme option",
+    "theme_desc": "Toggle dark to light !",
+    "color_title": "Main color",
+    "color_desc": "Set the main color linked to modules : button, fields, etc...",
+    "lang_title": "Language",
+    "lang_desc": "Choose your language",
+    "email_title": "Email",
+    "email_desc": "Change your email (disabled)",
+    "username_title": "User name",
+    "username_desc": "Change your nickname (Visible when you share codes)",
+    "password_title": "Password",
+    "password_desc": "Change your password",
+    "avatar_title": "Avatar",
+    "avatar_desc": "Change your profile picture",
+    "delete_title": "Deleting",
+    "delete_desc": "Delete your account :'("
+  },
+  "project": {
+    "no_data": "No data",
+    "selectOrCreate": "Select on project or create one",
+    "filter": "Projects filter",
+    "edit_message": "Attention, you are on the editing page.",
+    "create_message": "Attention, you are on the creating page.",
+    "project_name": "Project name",
+    "project_category": "Choose a category",
+    "project_private": "Make the project ",
+    "project_desc": "Description",
+    "project_md_preview": "Markdown preview",
+    "project_code_file": "Name (ex: index.html)",
+    "project_code_language": "Language",
+    "project_code_code": "Your code: ",
+    "project_code_desc": "Code description above: ",
+    "update_success": "Project updated !"
+  },
+  "notifications": {
+    "api_notFound": "We can't find your information...",
+    "disconnect_success": "Disconnect successful",
+    "connect_success": {
+      "title": "Connection successful",
+      "meta": "You have been redirected !"
     }
   }
 }

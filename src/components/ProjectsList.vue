@@ -1,6 +1,6 @@
 <template>
   <div class="searchIn">
-    <n-input placeholder="Filtrer les projets" v-model:value="searchProject" round>
+    <n-input :placeholder="$t('project.filter')" v-model:value="searchProject" round>
       <template #prefix>
         <n-icon>
           <Search28Regular />
@@ -22,6 +22,7 @@ import { computed, defineComponent, onMounted, ref, watchEffect } from 'vue'
 import { NLayoutContent, NH2, NIcon, NInput } from 'naive-ui'
 import { Search28Regular } from '@vicons/fluent'
 import { useStore } from 'vuex'
+import router from '@/router'
 export default defineComponent({
   name: 'ListOfProjects',
   components: {
@@ -58,6 +59,7 @@ export default defineComponent({
 
     function openDoc (PID) {
       store.dispatch('project/SELECT_PROJECT', PID._id)
+      router.push(`/pid/${PID._id}`)
     }
     return {
       searchProject,

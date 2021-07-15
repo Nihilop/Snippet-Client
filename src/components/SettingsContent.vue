@@ -3,7 +3,7 @@
     <n-form :model="appSettings" style="max-width:90%; margin:auto;">
       <n-list bordered>
         <n-list-item>
-        <n-h1>Paramètres: </n-h1>
+        <n-h1>{{ $t('utils.parameters') }}: </n-h1>
           <n-list>
             <!-- Item in Categorie -->
             <n-list-item class="list_box">
@@ -15,7 +15,7 @@
                   </n-icon>
                 </n-button>
               </template>
-              <n-thing class="noSelect" title="Options de thème" description="Cette feature rencontre quelques problèmes mais elle passe du theme sombre à clair" />
+              <n-thing class="noSelect" :title="$t('options.theme_title')" :description="$t('options.theme_desc')" />
             </n-list-item>
             <!-- Color primary -->
             <n-list-item class="list_box">
@@ -24,7 +24,25 @@
                   <n-color-picker class="pickerOption" v-model:value="modelRef.settings.color" :default-value="modelRef.settings.color" :show-alpha="true" :modes="['hex']"/>
                 </n-form-item>
               </template>
-              <n-thing class="noSelect" title="Couleur primaire" description="Changer la couleur principal lié aux modules : boutton, champs de textes, etc.." />
+              <n-thing class="noSelect" :title="$t('options.color_title')" :description="$t('options.color_desc')" />
+            </n-list-item>
+            <!-- internationalization -->
+            <n-list-item class="list_box">
+              <template #suffix>
+                <n-form-item path="language">
+                  <n-popselect class="lang_selection" v-model:value="$i18n.locale" @update:value="handleLangValue" trigger="click" placement="bottom-center" :options="langOptions" :render-label="renderLabel">
+                    <n-button text class="flagNLang">
+                      <template #icon>
+                        <n-icon>
+                          <country-flag :country="$i18n.locale == 'en' ? 'gb' : $i18n.locale" size='normal'/>
+                        </n-icon>
+                      </template>
+                      <span class="lang_text">{{ $t($i18n.locale) }}</span>
+                    </n-button>
+                  </n-popselect>
+                </n-form-item>
+              </template>
+              <n-thing class="noSelect" :title="$t('options.lang_title')" :description="$t('options.lang_desc')" />
             </n-list-item>
             <!-- app settings -->
             <n-list-item class="list_box" v-if="isElectron">
@@ -44,27 +62,27 @@
                   <n-input v-model:value="modelRef.email" placeholder="adress@email.com" disabled/>
                 </n-form-item>
               </template>
-              <n-thing class="noSelect" title="Adresse email" description="Changer votre adresse email de connexion." />
+              <n-thing class="noSelect" :title="$t('options.email_title')" :description="$t('options.email_desc')" />
             </n-list-item>
             <n-list-item class="list_box">
               <template #suffix>
                 <n-form-item path="username" :rule="usernameRule">
-                  <n-input v-model:value="modelRef.name" placeholder="Nom d'utilisateur"/>
+                  <n-input v-model:value="modelRef.name" :placeholder="$t('utils.username')"/>
                 </n-form-item>
               </template>
-              <n-thing class="noSelect" title="Nom d'utilisateur" description="Changer votre pseudo." />
+              <n-thing class="noSelect" :title="$t('options.username_title')" :description="$t('options.username_desc')" />
             </n-list-item>
             <n-list-item class="list_box">
               <template #suffix>
                 <n-space vertical>
                   <n-input v-model:value="passwordChange" placeholder="Mot de passe" type="text"/>
                   <n-form-item path="password" label="Confirmer" :rule="confirmPasswordRule" v-if="passwordChange && passwordChange.length >= 8">
-                    <n-input v-model:value="modelRef.password" placeholder="Confirmer mot de passe" type="text"/>
+                    <n-input v-model:value="modelRef.password" :placeholder="$t('utils.confirm') + $t('utils.password')" type="text"/>
                   </n-form-item>
 
                 </n-space>
               </template>
-              <n-thing class="noSelect" title="Mot de passe" description="Changer votre mot de passe. Il doit faire au moins 8 caractères" />
+              <n-thing class="noSelect" :title="$t('options.password_title')" :description="$t('options.password_desc')" />
             </n-list-item>
             <n-list-item class="list_box">
               <template #suffix>
@@ -77,15 +95,15 @@
                   <p class="mb-0">size: {{ image.size/1024 }}KB</p> -->
                 </div>
               </template>
-              <n-thing class="noSelect" title="Avatar" description="Changer votre avatar." />
+              <n-thing class="noSelect" :title="$t('options.avatar_title')" :description="$t('options.avatar_desc')" />
             </n-list-item>
             <n-list-item class="list_box">
               <template #suffix>
                 <n-form-item path="color" :rule="colorRule">
-                  <n-button @click="confirmDelete = true" type="error">Supprimer</n-button>
+                  <n-button @click="confirmDelete = true" type="error">{{ $t('utils.delete') }}</n-button>
                 </n-form-item>
               </template>
-              <n-thing class="noSelect" title="Supression" description="Supprimer le compte utilisateur." />
+              <n-thing class="noSelect" :title="$t('options.delete_title')" :description="$t('options.delete_desc')" />
             </n-list-item>
           </n-list>
         </n-list-item>
@@ -119,11 +137,12 @@
   </div>
 </template>
 <script>
-import { defineComponent, ref, onMounted, reactive, watchEffect, computed } from 'vue'
-import { NList, NListItem, NThing, NSwitch, NButton, NSpace, NIcon, NH1, NColorPicker, NForm, NFormItem, useNotification, NInput, NCard, NModal, useMessage } from 'naive-ui'
+import { defineComponent, ref, onMounted, reactive, watchEffect, computed, h, resolveComponent } from 'vue'
+import { NList, NListItem, NThing, NSwitch, NButton, NSpace, NIcon, NH1, NColorPicker, NPopselect, NForm, NFormItem, useNotification, NInput, NCard, NModal, useMessage } from 'naive-ui'
 import { WeatherSunny24Filled, WeatherMoon24Filled } from '@vicons/fluent'
 import { isElectron } from 'environ'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 import router from '@/router'
 export default defineComponent({
   name: 'settings',
@@ -143,14 +162,26 @@ export default defineComponent({
     NInput,
     NCard,
     NModal,
+    NPopselect,
     // Icons:
     WeatherSunny24Filled,
     WeatherMoon24Filled
   },
   data () {
     return {
+      langOptions: [],
       isElectron: isElectron()
     }
+  },
+  mounted () {
+    this.$i18n.availableLocales.forEach(lang => {
+      const langOptions = {
+        label: lang,
+        value: lang,
+        disabled: false
+      }
+      this.langOptions.push(langOptions)
+    })
   },
   setup () {
     const active = ref(false)
@@ -165,13 +196,15 @@ export default defineComponent({
     const userId = ref(null)
     const message = useMessage()
     const passwordChange = ref('')
+    const { t } = useI18n({ useScope: 'global' })
     const modelRef = ref({
       name: null,
       email: null,
       password: null,
       avatar: null,
       settings: {
-        color: null
+        color: null,
+        lang: null
       }
     })
     const dataModified = computed(() => {
@@ -203,6 +236,7 @@ export default defineComponent({
       currentUser.value = store.state.user.currentUser
       userId.value = store.state.user.currentUser._id
       modelRef.value.name = currentUser.value.name
+      modelRef.value.settings.lang = currentUser.value.settings.lang
       modelRef.value.settings.color = currentUser.value.settings.color || '#3498db'
       modelRef.value.email = currentUser.value.email
       preview.value = currentUser.value.avatar
@@ -271,6 +305,7 @@ export default defineComponent({
         user: dataModified.value,
         UID: currentUser.value._id
       }
+      console.log(data.user)
       store.dispatch('user/update', data).then(() => {
         message.success('Le profile a bien été mis à jour.')
       }).catch((e) => {
@@ -297,6 +332,13 @@ export default defineComponent({
       return modelRef.value.password === passwordChange.value
     }
 
+    function handleLangValue (value) {
+      console.log(value)
+      modelRef.value.settings.lang = value
+      localStorage.lang = value
+      saveParameters()
+    }
+
     return {
       passwordChange,
       deleteAccount,
@@ -311,6 +353,15 @@ export default defineComponent({
       saveParameters,
       changeTheme,
       appSettings,
+      handleLangValue,
+      renderLabel: (options) => {
+        return [
+          h('div', { style: 'display: flex; vertical-align: middle;' },
+            h(resolveComponent('country-flag'), { style: 'margin:-3px 0 auto -20px;', country: options.value === 'en' ? 'gb' : options.value, size: 'normal' }),
+            h('span', { style: 'margin:auto;' }, t(options.label))
+          )
+        ]
+      },
       colorRule: {
         trigger: 'change',
         validator (_, value) {
@@ -386,6 +437,9 @@ export default defineComponent({
     width:fit-content;
     height: fit-content;
   }
+}
+.lang_text {
+  margin:0 20px;
 }
 
 .upload-avatar_wrapper {

@@ -1,16 +1,8 @@
 {
-  "French": "Français",
-  "English": "Anglais",
-  "landing": {
-    "hero": {
-      "title": "Bot propulsé par",
-      "brand": "discordeno",
-      "description": "lorem ipsum",
-      "btn1": "Commencer",
-      "btn2": "Invite moi !"
-    }
-  },
+  "fr": "Français",
+  "en": "Anglais",
   "utils":{
+    "home": "Accueil",
     "login": "Connexion",
     "disconnect": "Déconnexion",
     "settings": "Paramètres",
@@ -18,23 +10,64 @@
     "loading": "Chargement",
     "reset": "Réinitialiser",
     "save": "Sauvegarder",
-    "save_message": "Vous avez modifié des élements, voulez-vous sauvegarder ?"
+    "delete": "Supprimer",
+    "save_message": "Vous avez modifié des élements, voulez-vous sauvegarder ?",
+    "download": "Télécharger",
+    "create": "Créer",
+    "close": "Fermer",
+    "close_unsave": "Fermer sans sauvegarder",
+    "private": "Privé",
+    "public": "Publique",
+    "project": "Projet",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "confirm": "Confirmer ",
+    "parameters": "Paramètres"
   },
-  "dashboard": {
-    "server": {
-      "overview_title": "Message de Bienvenue",
-      "overview_welcomeMsg": "Bonjour & bienvenue sur votre page <i>Vue d'enssemble</i> de votre serveur, nous avons pris soin de vous afficher les statistiques.",
-      "settings_title": "Configuration globale du bot"
-    },
-    "menu": {
-      "overview": "Vue d'enssemble",
-      "rank": "Classement",
-      "settings": "Réglages",
-      "welcome": "Bienvenue",
-      "cmd_custom": "Commandes personnalisées",
-      "role_react": "Rôles réactions",
-      "moderation": "Modération",
-      "music":"Musique"
+  "global": {
+    "info_download": "Télécharger la version bureau !"
+  },
+  "options": {
+    "theme_title": "Option de thème",
+    "theme_desc": "Changer le thème de sombre à clair !",
+    "color_title": "Couleur primaire",
+    "color_desc": "Changer la couleur principale liée aux modules: boutton, champs de textes, etc",
+    "lang_title": "Langue",
+    "lang_desc": "Changer la langue de l'application",
+    "email_title": "Adresse email",
+    "email_desc": "Changer votre adresse email de connexion (Désactiver pour des raisons évidentes)",
+    "username_title": "Nom d'utilisateur",
+    "username_desc": "Changer votre pseudo (Visible lors de partages de code public)",
+    "password_title": "Mot de passe",
+    "password_desc": "Changer votre mot de passe",
+    "avatar_title": "Avatar",
+    "avatar_desc": "Changer votre image de profile",
+    "delete_title": "Suppression",
+    "delete_desc": "Supprimer définitivement le compte utilisateur"
+  },
+  "project": {
+    "no_data": "Aucune donnée",
+    "selectOrCreate": "selectionner un projet ou créer en un",
+    "filter": "Filtrer les projets",
+    "edit_message": "Attention, vous êtes sur la page d'édition.",
+    "create_message": "Attention, vous êtes sur la page de création.",
+    "project_name": "Nom du projet",
+    "project_category": "Choisissez une catégorie",
+    "project_private": "Rendre le projet ",
+    "project_desc": "Description",
+    "project_md_preview": "Prévisualisation Markdown",
+    "project_code_file": "Nom (ex: index.html)",
+    "project_code_language": "Langage",
+    "project_code_code": "Votre code: ",
+    "project_code_desc": "Déscription du code ci-dessus: ",
+    "update_success": "Projet mis à jour !"
+  },
+  "notifications": {
+    "api_notFound": "Nous ne parvenons pas à trouver vos informations..",
+    "disconnect_success": "Deconnexion réussie",
+    "connect_success": {
+      "title": "Connexion réussie",
+      "meta": "Vous avez été rediriger !"
     }
   }
 }

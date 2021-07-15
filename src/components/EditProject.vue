@@ -2,16 +2,16 @@
   <div class="addProject">
     <n-form :rules="formRules" ref="formRef" :model="modelRef">
       <n-h1>Edition: {{$store.state.project.project.name}}</n-h1>
-      <p style="margin-bottom:24px">Attention, vous êtes sur la page d'édition de {{$store.state.project.project.name}}, merci de votre attention.</p>
+      <p style="margin-bottom:24px">{{$t('project.edit_message')}} :{{$store.state.project.project.name}}</p>
       <n-space vertical>
         <n-space>
-          <n-form-item path="name" label="Nom du projet">
-            <n-input v-model:value="modelRef.name" placeholder="Nom..." size="large"/>
+          <n-form-item path="name" :label="$t('project.project_name')">
+            <n-input v-model:value="modelRef.name" :placeholder="$t('project.project_name')" size="large"/>
           </n-form-item>
-          <n-form-item path="category" label="Choisissez une catégorie">
+          <n-form-item path="category" :label="$t('project.project_category')">
             <n-select v-model:value="modelRef.category" :options="categories" filterable size="large"/>
           </n-form-item>
-          <n-form-item path="private" :label="`Rendre le projet ${modelRef.private ? 'Public': 'Privé'}`">
+          <n-form-item path="private" :label="`${$t('project.project_private')} ${modelRef.private ? $t('utils.public'): $t('utils.private')}`">
             <n-button text @click="privateToPublic" size="large">
               <template #icon>
                 <n-icon>
@@ -19,14 +19,14 @@
                   <ShieldCheckmark48Regular v-else style="color: #2ecc71 !important"/>
                 </n-icon>
               </template>
-              Projet : <span style="padding:0 5px;" :style="modelRef.private ? 'color: #e74c3c !important': 'color: #2ecc71 !important'"> {{modelRef.private ? 'Privé': 'Publique'}}</span>
+              {{$t('utils.project')}} : <span style="padding:0 5px;" :style="modelRef.private ? 'color: #e74c3c !important': 'color: #2ecc71 !important'"> {{modelRef.private ? $t('utils.private'): $t('utils.public')}}</span>
             </n-button>
           </n-form-item>
         </n-space>
-        <n-form-item path="description" label="Description">
+        <n-form-item path="description" :label="$t('project.project_desc')">
           <n-input type="textarea" v-model:value="modelRef.description" placeholder="Description du projet..." />
         </n-form-item>
-        <p>Markdown preview : </p>
+        <p>{{$t('project.project_md_preview')}} </p>
         <Markdown class="mardown_preview" :source="modelRef.description" />
         <n-list bordered>
           <template #footer>
@@ -51,28 +51,28 @@
               </template>
               <template #header>
                 <n-space>
-                <n-form-item path="fileTitle" label="FileName.ts">
+                <n-form-item path="fileTitle" :label="$t('project.project_code_file')">
                   <n-input v-model:value="code.file" placeholder="File name.ts" />
                 </n-form-item>
-                <n-form-item path="language" label="Langage">
+                <n-form-item path="language" :label="$t('project.project_code_language')">
                   <n-select v-model:value="code.language" :options="codeLanguage" filterable/>
                 </n-form-item>
                 </n-space>
               </template>
               <template #description>
-                <n-form-item path="fileCode" label="block Code">
+                <n-form-item path="fileCode" :label="$t('project.project_code_code')">
                   <prism-editor class="my-editor" v-model="code.code" :highlight="highlighter" line-numbers></prism-editor>
                 </n-form-item>
               </template>
               <template #footer>
-                <n-form-item path="fileDescription" label="Code description">
+                <n-form-item path="fileDescription" :label="$t('project.project_code_desc')">
                   <n-input type="textarea" v-model:value="code.description" placeholder="Notes..." />
                 </n-form-item>
               </template>
             </n-thing>
           </n-list-item>
         </n-list>
-        <n-button @click="close" type="error">Fermer sans sauvegarder</n-button>
+        <n-button @click="close" type="error">{{$t('utils.close_unsave')}}</n-button>
       </n-space>
     </n-form>
     <transition name="drop-bottom">
@@ -205,7 +205,6 @@ export default defineComponent({
       e.preventDefault()
       formRef.value.validate((errors) => {
         if (!errors) {
-          console.log('ok', modelRef.value)
           const result = {
             data: modelRef.value,
             pid: pid.value
@@ -247,11 +246,15 @@ export default defineComponent({
       codeLanguage: [
         {
           label: 'Javascript',
-          value: 'javascript'
+          value: 'Javascript'
         },
         {
           label: 'HTML',
           value: 'HTML'
+        },
+        {
+          label: 'PHP',
+          value: 'PHP'
         },
         {
           label: 'CSS',
@@ -265,11 +268,11 @@ export default defineComponent({
       categories: [
         {
           label: 'Javascript',
-          value: 'javascript'
+          value: 'Javascript'
         },
         {
-          label: 'Jquery',
-          value: 'Jquery'
+          label: 'PHP',
+          value: 'PHP'
         },
         {
           label: 'VueJS',
@@ -298,6 +301,10 @@ export default defineComponent({
         {
           label: 'SCSS',
           value: 'SCSS'
+        },
+        {
+          label: 'Jquery',
+          value: 'Jquery'
         }
       ]
     }

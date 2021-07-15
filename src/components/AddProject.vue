@@ -2,19 +2,20 @@
   <div class="addProject">
     <n-form :rules="formRules" ref="formRef" :model="modelRef">
       <n-h1>Ajouter un document</n-h1>
+      <p style="margin-bottom:24px">{{$t('project.create_message')}}</p>
       <n-space vertical>
         <n-space>
-          <n-form-item path="name" label="Nom du projet">
-            <n-input v-model:value="modelRef.name" placeholder="Nom..." size="large"/>
+          <n-form-item path="name" :label="$t('project.project_name')">
+            <n-input v-model:value="modelRef.name" :placeholder="$t('project.project_name')" size="large"/>
           </n-form-item>
-          <n-form-item path="category" label="Choisissez une catégorie">
+          <n-form-item path="category" :label="$t('project.project_category')">
             <n-select v-model:value="modelRef.category" :options="categories" filterable size="large"/>
           </n-form-item>
         </n-space>
-        <n-form-item path="description" label="Description">
+        <n-form-item path="description" :label="$t('project.project_desc')">
           <n-input type="textarea" v-model:value="modelRef.description" placeholder="Description du projet..." />
         </n-form-item>
-        <p>Markdown preview : </p>
+        <p>{{$t('project.project_md_preview')}}</p>
         <Markdown class="mardown_preview" :source="modelRef.description" />
         <n-list bordered>
           <template #footer>
@@ -39,28 +40,28 @@
               </template>
               <template #header>
                 <n-space>
-                <n-form-item path="fileTitle" label="FileName.ts">
+                <n-form-item path="fileTitle" :label="$t('project.project_code_file')">
                   <n-input v-model:value="code.file" placeholder="File name.ts" />
                 </n-form-item>
-                <n-form-item path="language" label="Langage">
+                <n-form-item path="language" :label="$t('project.project_code_language')">
                   <n-select v-model:value="code.language" :options="codeLanguage" filterable/>
                 </n-form-item>
                 </n-space>
               </template>
               <template #description>
-                <n-form-item path="fileCode" label="block Code">
+                <n-form-item path="fileCode" :label="$t('project.project_code_code')">
                   <prism-editor class="my-editor" v-model="code.code" :highlight="highlighter" line-numbers></prism-editor>
                 </n-form-item>
               </template>
               <template #footer>
-                <n-form-item path="fileDescription" label="Code description">
+                <n-form-item path="fileDescription" :label="$t('project.project_code_desc')">
                   <n-input type="textarea" v-model:value="code.description" placeholder="Notes..." />
                 </n-form-item>
               </template>
             </n-thing>
           </n-list-item>
         </n-list>
-        <n-button @click="close" type="error">Fermer</n-button>
+        <n-button @click="close" type="error">{{$t('utils.close')}}</n-button>
       </n-space>
     </n-form>
     <transition name="drop-bottom">
@@ -69,7 +70,7 @@
           <div class="save_card">
             <n-thing class="text_wrapper" :title="$t('utils.save')" :description="$t('utils.save_message')" />
             <n-space class="btn_wrapper">
-              <n-button class="resetBtn" text @click="close">Fermer</n-button>
+              <n-button class="resetBtn" text @click="close">{{$t('utils.close')}}</n-button>
               <n-button type="success" @click="AddProject">{{$t('utils.save')}}</n-button>
             </n-space>
           </div>
@@ -158,7 +159,6 @@ export default defineComponent({
       e.preventDefault()
       formRef.value.validate((errors) => {
         if (!errors) {
-          console.log('ok', modelRef.value)
           store.dispatch('project/CREATE_PROJECT', modelRef.value)
           emit('showUpdate', false)
         } else {
@@ -194,11 +194,15 @@ export default defineComponent({
       codeLanguage: [
         {
           label: 'Javascript',
-          value: 'javascript'
+          value: 'Javascript'
         },
         {
           label: 'HTML',
           value: 'HTML'
+        },
+        {
+          label: 'PHP',
+          value: 'PHP'
         },
         {
           label: 'CSS',
@@ -212,11 +216,11 @@ export default defineComponent({
       categories: [
         {
           label: 'Javascript',
-          value: 'javascript'
+          value: 'Javascript'
         },
         {
-          label: 'Jquery',
-          value: 'Jquery'
+          label: 'PHP',
+          value: 'PHP'
         },
         {
           label: 'VueJS',
@@ -245,6 +249,10 @@ export default defineComponent({
         {
           label: 'SCSS',
           value: 'SCSS'
+        },
+        {
+          label: 'Jquery',
+          value: 'Jquery'
         }
       ]
     }

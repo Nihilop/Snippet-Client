@@ -73,17 +73,30 @@ export default defineComponent({
       btnDisabled.value = true
       store.dispatch('auth/login', modelRef.value).then(
         () => {
-          notification.success({
-            content: 'Connexion réussie',
-            meta: 'Vous avez été rediriger !',
-            duration: 5000
+          store.dispatch('user/currentUser').then((data) => {
+            console.log(data)
+            if (data.user.verified) {
+              notification.success({
+                content: 'Connexion réussie',
+                meta: 'Vous avez été rediriger !',
+                duration: 5000
+              })
+              router.push('/')
+              store.dispatch('project/RESET_ALL')
+            } else {
+              btnDisabled.value = false
+              notification.error({
+                content: 'Vérification du compte',
+                meta: 'Un administrateur vérifie le statut de votre compte.',
+                duration: 5000
+              })
+              store.dispatch('auth/logout')
+            }
           })
-          router.push('/')
-          store.dispatch('project/RESET_ALL')
         }
       ).catch(e => {
+        btnDisabled.value = false
         if (e.response) {
-          btnDisabled.value = false
           console.log(e.response.data.message)
           notification.error({
             title: e.response.data.message || 'Serveur offline',

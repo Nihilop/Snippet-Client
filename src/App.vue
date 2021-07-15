@@ -45,6 +45,14 @@ export default defineComponent({
       )
     }
   },
+  mounted () {
+    if (!localStorage.lang || localStorage.lang === 'null') {
+      localStorage.lang = 'fr'
+      this.$i18n.locale = localStorage.lang
+    } else {
+      this.$i18n.locale = localStorage.lang
+    }
+  },
   setup () {
     const store = useStore()
     const theme = ref(null)
@@ -63,6 +71,16 @@ export default defineComponent({
       }
     })
     onMounted(() => {
+      if (loggedIn.value) {
+        store.dispatch('user/currentUser').catch((e) => {
+          if (e.response) {
+            console.log(e.response.status)
+            if (e.response.status === 401) {
+              store.dispatch('auth/logout')
+            }
+          }
+        })
+      }
       store.dispatch('CHANGE_THEME', localStorage.theme)
       setTimeout(() => {
         isLoaded.value = true
@@ -72,11 +90,10 @@ export default defineComponent({
       } else {
         document.body.classList.add('browser')
       }
-      console.log(isApp.value)
     })
     watchEffect(() => {
       theme.value = store.state.themeColor
-      if (loggedIn.value && store.state.user.currentUser) {
+      if (loggedIn.value && store.state.user.currentUser !== '') {
         setTimeout(() => {
           themeColor.value = store.state.user.currentUser.settings.color
           themeOverrides.value.common.primaryColor = themeColor.value

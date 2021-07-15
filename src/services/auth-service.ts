@@ -1,7 +1,13 @@
 import axios from 'axios'
 
-// const API_URL = 'http://localhost:4000/v1/'
-const API_URL = 'https://api.nihilo.fr/v1/'
+const DEV_MODE = process.env.NODE_ENV !== 'production'
+let API_URL = ''
+
+if (DEV_MODE) {
+  API_URL = 'http://localhost:4000/v1/'
+} else {
+  API_URL = 'https://api.nihilo.fr/v1/'
+}
 
 class AuthService {
   login (user:any) {

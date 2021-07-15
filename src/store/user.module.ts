@@ -1,4 +1,5 @@
 import UserService from '@/services/user.service'
+import AdminService from '@/services/admin.service'
 export const user = {
   namespaced: true,
   state: {
@@ -8,6 +9,11 @@ export const user = {
     currentUser (context:any) {
       return UserService.getUserProfil().then(
         (response:any) => {
+          if (localStorage.lang) {
+            localStorage.lang = response.data.user.settings.lang
+          } else {
+            localStorage.lang = 'fr'
+          }
           context.commit('currentUserSuccess', response.data.user)
           return Promise.resolve(response.data)
         },
@@ -29,8 +35,18 @@ export const user = {
       )
     },
     delete (event:any, uid: any) {
-      console.log(event)
       return UserService.DeleteUserProfil(uid).then(
+        (response:any) => {
+          return Promise.resolve(response.data)
+        },
+        (error:any) => {
+          return Promise.reject(error)
+        }
+      )
+    },
+    // Admin
+    getAllUsers (state:any) {
+      return AdminService.getAllUsers().then(
         (response:any) => {
           return Promise.resolve(response.data)
         },
