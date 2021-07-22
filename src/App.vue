@@ -72,14 +72,7 @@ export default defineComponent({
     })
     onMounted(() => {
       if (loggedIn.value) {
-        store.dispatch('user/currentUser').catch((e) => {
-          if (e.response) {
-            console.log(e.response.status)
-            if (e.response.status === 401) {
-              store.dispatch('auth/logout')
-            }
-          }
-        })
+        store.dispatch('user/currentUser')
       }
       store.dispatch('CHANGE_THEME', localStorage.theme)
       setTimeout(() => {
@@ -100,7 +93,7 @@ export default defineComponent({
           themeOverrides.value.common.primaryColorHover = themeColor.value
           themeOverrides.value.common.primaryColorPressed = themeColor.value
           themeOverrides.value.common.primaryColorSuppl = themeColor.value
-        }, 200)
+        }, 1000)
       }
     })
     return {
@@ -117,7 +110,7 @@ export default defineComponent({
 
 <style lang="scss">
 @import '@/assets/style/variables.scss';
-@import 'https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.9.5/tailwind.min.css';
+// @import 'https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.9.5/tailwind.min.css';
 
 .noSelect {
   user-select: none;

@@ -34,6 +34,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 import { NButton, NA, NForm, NFormItem, NInput, useNotification, NCheckbox, NSpace } from 'naive-ui'
 import { useStore } from 'vuex'
 import router from '@/router'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'loginPage',
@@ -48,6 +49,7 @@ export default defineComponent({
   },
   setup () {
     const store = useStore()
+    const route = useRoute()
     const formRef = ref(null)
     const loading = ref(false)
     const rPasswordFormItemRef = ref(null)
@@ -63,7 +65,7 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      if (loggedIn.value) {
+      if (loggedIn.value && !route.query.redirect) {
         router.push('/')
       }
     })
@@ -81,7 +83,12 @@ export default defineComponent({
                 meta: 'Vous avez été rediriger !',
                 duration: 5000
               })
-              router.push('/')
+              console.log(route.query.redirect)
+              if (route.query.redirect) {
+                router.push(route.query.redirect)
+              } else {
+                router.push('/')
+              }
               store.dispatch('project/RESET_ALL')
             } else {
               btnDisabled.value = false

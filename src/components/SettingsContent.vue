@@ -124,12 +124,12 @@
       </div>
     </transition>
     <n-modal v-model:show="confirmDelete" :mask-closable="true" >
-      <n-card style="width:600px;" title="Supprimer le compte" :bordered="false" :native-scrollbar="false" >
-        <span>Confirmez vous la suppression du compte utilisateur ? toutes vos données seront supprimées</span>
+      <n-card style="width:600px;" :title="$t('utils.delete')" :bordered="false" :native-scrollbar="false" >
+        <span>{{ $t('utils.confirm_delete_user')}}</span>
         <template #footer>
           <n-space>
-            <n-button type="error" @click="confirmDelete = false">annuler</n-button>
-            <n-button type="success" @click="deleteAccount">Accepter</n-button>
+            <n-button type="error" @click="confirmDelete = false">{{ $t('utils.cancel')}}</n-button>
+            <n-button type="success" @click="deleteAccount">{{ $t('utils.delete')}}</n-button>
           </n-space>
         </template>
       </n-card>

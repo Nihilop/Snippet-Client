@@ -1,3 +1,11 @@
+<route>
+{
+  "name": "ProjectID",
+  "meta": {
+    "requiresAuth": true
+  }
+}
+</route>
 <template>
   <div class="project" v-if="PIDIsSelected">
     <transition name="drop-top">
@@ -53,7 +61,7 @@
               <div v-if="code.code">
                 <span class="fileCode">{{ code.file }}</span>
                 <div class='code code-css'>
-                  <label>
+                  <label v-if="windowsWidth >= 450">
                     <n-button text size="small">
                       <!-- <template #icon>
                         <n-icon>
@@ -84,12 +92,12 @@
       </div>
     </transition>
     <n-modal v-model:show="confirmDelete" :mask-closable="true" >
-      <n-card style="width:600px;" title="Supprission du projet" :bordered="false" :native-scrollbar="false" >
-        <span>Voulez-vous supprimer le projet ?</span>
+      <n-card style="width:600px;" :title="$t('utils.delete')" :bordered="false" :native-scrollbar="false" >
+        <span>{{ $t('utils.confirm_delete_project')}}</span>
         <template #footer>
           <n-space>
-            <n-button type="error" @click="confirmDelete = false">annuler</n-button>
-            <n-button type="success" @click="deleteProject(project._id)">Accepter</n-button>
+            <n-button type="error" @click="confirmDelete = false">{{ $t('utils.cancel')}}</n-button>
+            <n-button type="success" @click="deleteProject(project._id)">{{ $t('utils.delete')}}</n-button>
           </n-space>
         </template>
       </n-card>
@@ -173,6 +181,7 @@ export default {
     const addProject = ref(false)
     const editModal = ref(false)
     const PIDIsSelected = ref(false)
+    const windowsWidth = ref(window.innerWidth)
     const { t } = useI18n({ useScope: 'global' })
     const project = computed(() => {
       return store.state.project.project
@@ -183,6 +192,7 @@ export default {
       return store.state.auth.status.loggedIn
     })
     onMounted(() => {
+      window.onresize = () => { windowsWidth.value = window.innerWidth }
       PIDIsSelected.value = store.state.project.PIDIsSelected
     })
     watchEffect(() => {
@@ -232,6 +242,7 @@ export default {
       router.push('/login')
     }
     return {
+      windowsWidth,
       openShare,
       updateVisibility,
       PIDIsSelected,
@@ -349,7 +360,7 @@ pre {
   }
 }
 div.code {
-  margin: 5px 25px 15px 22px;
+  // margin: 5px 25px 15px 22px;
   border-radius: 8px;
   // box-shadow: 0 0 5px 8px rgba(gray, 1%);
   position: relative;

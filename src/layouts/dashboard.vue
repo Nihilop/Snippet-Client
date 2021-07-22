@@ -2,22 +2,24 @@
   <header class="header_bar">
     <transition name="drop-top">
       <div class="download_app" v-if="!isApp && appDlShow">
-        <n-icon :size="22" style="margin:0 5px">
-          <ArrowDownload24Regular/>
-        </n-icon>
-        <a href="/download/latest/client_app Setup 0.1.0.exe">{{ $t('global.info_download') }}</a>
-        <n-icon :size="18" style="margin: auto auto auto 50px" @click="dismissAppDownload">
+        <a href="/download/latest/client_app Setup 0.1.0.exe" style="display:flex; vertical-align:middle;">
+          <n-icon :size="22" style="margin:0 5px" v-if="windowsWidth >= 450">
+            <ArrowDownload24Regular/>
+          </n-icon>
+          <p style="margin:auto">{{ $t('global.info_download') }}</p>
+        </a>
+        <n-icon :size="18" style="margin: auto auto auto 10px" @click="dismissAppDownload">
           <Dismiss20Regular />
         </n-icon>
       </div>
     </transition>
     <div class="user_container">
       <n-space>
-        <n-button text v-if="currentUser.admin" @click="goAdminPage">
+        <n-button text v-if="currentUser && currentUser.admin" @click="goAdminPage">
           <template #icon>
             <ShieldCheckmark48Regular />
           </template>
-          Administration
+          <span v-if="windowsWidth >= 450">Administration</span>
         </n-button>
         <n-dropdown @select="userOptionSelect" trigger="click" :options="userOptions" placement="bottom-end">
           <n-button text>
@@ -53,14 +55,14 @@
         <n-layout-sider
           v-if="$store.state.project.CIDIsSelected"
           class="sidebarL_options glass"
-          :class="windowsWidth <= 380 && $store.state.project.CIDIsSelected ? 'menu--open_mobile' : null"
-          :width="windowsWidth <= 380 ? '100%' : 280">
+          :class="windowsWidth <= 450 && $store.state.project.CIDIsSelected ? 'menu--open_mobile' : null"
+          :width="windowsWidth <= 450 ? '100%' : 280">
           <!-- sidebar + -->
           <projects-list />
         </n-layout-sider>
       </transition>
 
-      <n-layout ref="container" class="content_wrapper" :class="$store.state.project.CIDIsSelected ? null : 'content_wrapper--mobile'" :native-scrollbar="false" content-style="padding: 34px;">
+      <n-layout ref="container" class="content_wrapper" :class="$store.state.project.CIDIsSelected ? null : 'content_wrapper--mobile'" :native-scrollbar="false" :content-style="windowsWidth <= 400 ? 'padding: 34px;' : 'padding: 10px;'">
         <router-view/>
       </n-layout>
 
@@ -129,21 +131,23 @@ export default defineComponent({
     })
     onMounted(() => {
       window.onresize = () => { windowsWidth.value = window.innerWidth }
-      store.dispatch('user/currentUser').catch(e => {
-        console.log(e)
-      })
-      setTimeout(() => {
-        if (!currentUser.value || currentUser.value === null || currentUser.value === undefined) {
-          notification.error({
-            content: 'API Error',
-            meta: "Nous ne parvenons pas à trouver vos informations.. vous allez être redirigé à la page d'authentification dans 2 secondes",
-            duration: 5000
-          })
-          setTimeout(() => {
-            logout()
-          }, 2000)
+      store.dispatch('user/currentUser').catch((e) => {
+        if (e.response) {
+          console.log(e.response)
         }
-      }, 1000)
+      })
+      // setTimeout(() => {
+      //   if (!currentUser.value || currentUser.value === null || currentUser.value === undefined) {
+      //     notification.error({
+      //       content: 'API Error',
+      //       meta: "Nous ne parvenons pas à trouver vos informations.. vous allez être redirigé à la page d'authentification dans 2 secondes",
+      //       duration: 5000
+      //     })
+      //     setTimeout(() => {
+      //       logout()
+      //     }, 2000)
+      //   }
+      // }, 1000)
     })
 
     function logout () {
@@ -213,7 +217,6 @@ export default defineComponent({
 <style lang="scss">
 @import '@/assets/style/variables.scss';
 @import '@/assets/style/animations.scss';
-@import 'https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.9.5/tailwind.min.css';
 
   .content_wrapper {
     transition: all 0.5s;
@@ -251,7 +254,7 @@ export default defineComponent({
       margin:auto auto auto 3% ;
       display: flex;
       background: #f1c40f;
-      padding: 8px 24px;
+      padding: 8px 10px;
       box-sizing: border-box;
       border-radius: 5px;
       border: 1px solid #e67e22;

@@ -2,6 +2,8 @@ import { createStore } from 'vuex'
 import { auth } from './auth.module'
 import { user } from './user.module'
 import { project } from './project.module'
+import { admin } from './admin.module'
+import { blog } from './blog.module'
 
 export default createStore({
   state: {
@@ -21,6 +23,8 @@ export default createStore({
   modules: {
     auth,
     user,
+    admin,
+    blog,
     project
   }
 })

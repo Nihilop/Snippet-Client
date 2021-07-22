@@ -1,7 +1,7 @@
 <template>
   <n-popover :overlap="false" placement="right" trigger="hover">
     <template #trigger>
-      <router-link class="PIDLink" exact to='/' @click="resetData">
+      <router-link :style="`--bg-color: ${$store.state.user.currentUser.settings.color}`" class="PIDLink" :class="$store.state.project.cateSelected === '' ? 'active' : null" exact to='/' @click="resetData">
         <n-icon :size="22" style="margin:auto;">
           <Home28Filled />
         </n-icon>
@@ -11,10 +11,10 @@
   </n-popover>
   <n-popover :overlap="false" placement="right" trigger="hover" v-for="(PID, index) in catComputed" :key="index">
     <template #trigger>
-      <a class="PIDLink" exact @click="selectedCat(PID[0].category)">
+      <router-link to='/pid' :style="`--bg-color: ${$store.state.user.currentUser.settings.color}`" class="PIDLink" :class="$store.state.project.cateSelected === PID[0].category ? 'active' : null"  @click="selectedCat(PID[0].category)">
         <img v-if="PID[0].image" :src="``">
         <img v-else :src="`/img/languages/${PID[0].category}.png`">
-      </a>
+      </router-link>
     </template>
     <div class="large-text">{{PID[0].category}}</div>
   </n-popover>
@@ -67,6 +67,7 @@ export default defineComponent({
     const notification = useNotification()
 
     function selectedCat (CID) {
+      // router.push('/pid')
       store.dispatch('project/CATEGORY_SELECTED', CID)
     }
 
@@ -80,16 +81,6 @@ export default defineComponent({
 
     function resetData () {
       store.dispatch('project/RESET_ALL')
-    }
-
-    function logout () {
-      notification.warning({
-        content: 'Deconnexion réussie',
-        duration: 5000
-      })
-      console.log('deco')
-      store.dispatch('auth/logout')
-      router.push('/login')
     }
 
     watchEffect(() => {
@@ -124,7 +115,7 @@ export default defineComponent({
     color:inherit;
     cursor: pointer;
 
-    &.router-link-exact-active {
+    &.active {
       position:relative;
       &:after {
         position:absolute;
@@ -134,7 +125,7 @@ export default defineComponent({
         height: 100%;
         border-radius:3px;
         z-index: 1;
-        background:#7289da;
+        background: var(--bg-color);
       }
     }
 

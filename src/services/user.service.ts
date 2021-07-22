@@ -11,20 +11,16 @@ if (DEV_MODE) {
 }
 
 class UserService {
-  getUserProfil () {
+  getUser () {
     return axios.get(API_URL + 'me', authHeader())
   }
 
-  UpdateUserProfil (data:any) {
+  update (data:any) {
     return axios.patch(API_URL + 'update/' + data.UID, data.user, authHeader())
   }
 
-  DeleteUserProfil (uid:any) {
+  delete (uid:any) {
     return axios.delete(API_URL + 'delete/' + uid, authHeader())
-  }
-
-  getProjects () {
-    return axios.get(API_URL + '/project/all', authHeader())
   }
 }
 

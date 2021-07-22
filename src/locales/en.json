@@ -11,6 +11,7 @@
     "reset": "Reset",
     "save": "Save",
     "delete": "Delete",
+    "cancel": "Cancel",
     "save_message": "You have modified some elements, do you want to save them?",
     "download": "Download",
     "create": "Create",
@@ -22,7 +23,10 @@
     "username": "Username",
     "password": "Password",
     "confirm": "Confirm ",
-    "parameters": "Parameters"
+    "parameters": "Parameters",
+    "confirm_delete_user": "Do you confirm the deletion of the user account? all its data will be deleted",
+    "confirm_delete_project": "Do you confirm the deletion of the snippet? All its data will be deleted",
+    "confirm_delete_post": "Do you confirm the deletion of the post? All its data will be deleted"
   },
   "global": {
     "info_download": "Download the desktop version !"

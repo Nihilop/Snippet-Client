@@ -7,7 +7,7 @@ export const user = {
   },
   actions: {
     currentUser (context:any) {
-      return UserService.getUserProfil().then(
+      return UserService.getUser().then(
         (response:any) => {
           if (localStorage.lang) {
             localStorage.lang = response.data.user.settings.lang
@@ -24,7 +24,7 @@ export const user = {
       )
     },
     update ({ dispatch }:any, data:any) {
-      return UserService.UpdateUserProfil(data).then(
+      return UserService.update(data).then(
         (response:any) => {
           dispatch('currentUser')
           return Promise.resolve(response.data)
@@ -35,7 +35,7 @@ export const user = {
       )
     },
     delete (event:any, uid: any) {
-      return UserService.DeleteUserProfil(uid).then(
+      return UserService.delete(uid).then(
         (response:any) => {
           return Promise.resolve(response.data)
         },

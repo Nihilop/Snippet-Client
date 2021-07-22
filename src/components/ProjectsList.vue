@@ -9,8 +9,8 @@
     </n-input>
   </div>
   <n-layout-content class="list_wrapper" :native-scrollbar="false" >
-    <ul class="menu_list">
-      <li v-for="(project, index) in projectFilter" :class="$store.state.project.project._id === project._id ? 'active' : null" :key="index" @click="windowsWidth <= 380 ? openDocMobile(project) : openDoc(project)">
+    <ul class="menu_list list">
+      <li v-for="(project, index) in projectFilter" :class="$store.state.project.project._id === project._id ? 'active' : null" :key="index" @click="windowsWidth <= 900 ? openDocMobile(project) : openDoc(project)">
         <n-h2 class="noSelect">{{project.name}}</n-h2>
         <span class="noSelect">{{project.category}}</span>
       </li>
@@ -88,6 +88,7 @@ export default defineComponent({
 }
 .menu_list {
   padding: 15px 0;
+  box-sizing: border-box;
   .active {
     position:relative;
     background:rgba(gray, 40%);
@@ -99,6 +100,7 @@ export default defineComponent({
     width:88%;
     background:rgba(gray, 10%);
     cursor: pointer;
+    box-sizing: border-box;
     .n-h2 {
       margin:0 !important;
       overflow: hidden;

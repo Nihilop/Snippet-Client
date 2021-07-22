@@ -11,6 +11,7 @@
     "reset": "Réinitialiser",
     "save": "Sauvegarder",
     "delete": "Supprimer",
+    "cancel": "Annuler",
     "save_message": "Vous avez modifié des élements, voulez-vous sauvegarder ?",
     "download": "Télécharger",
     "create": "Créer",
@@ -22,7 +23,10 @@
     "username": "Nom d'utilisateur",
     "password": "Mot de passe",
     "confirm": "Confirmer ",
-    "parameters": "Paramètres"
+    "parameters": "Paramètres",
+    "confirm_delete_user": "Confirmez vous la suppression du compte utilisateur ? toutes ses données seront supprimées",
+    "confirm_delete_project": "Confirmez vous la suppression du snippet ? toutes ses données seront supprimées",
+    "confirm_delete_post": "Confirmez vous la suppression de l'article ? toutes ses données seront supprimées"
   },
   "global": {
     "info_download": "Télécharger la version bureau !"

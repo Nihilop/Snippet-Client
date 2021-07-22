@@ -12,7 +12,7 @@ export const project = {
   },
   actions: {
     async ALL_PROJECTS (context:any) {
-      return ProjectService.getAllProjects().then(
+      return ProjectService.myProjects().then(
         (response:any) => {
           context.commit('ALL_PROJECT_SUCCESS', response.data.data)
           return Promise.resolve(response.data)
@@ -24,7 +24,7 @@ export const project = {
       )
     },
     CREATE_PROJECT (context:any, data:any) {
-      return ProjectService.createProject(data).then(
+      return ProjectService.create(data).then(
         (response:any) => {
           console.log(response.data)
           context.dispatch('ALL_PROJECTS')
@@ -40,7 +40,7 @@ export const project = {
       )
     },
     UPDATE_PROJECT (context:any, data: any) {
-      return ProjectService.UpdateProject(data.data, data.pid).then(
+      return ProjectService.update(data.data, data.pid).then(
         (response:any) => {
           context.dispatch('CATEGORY_SELECTED', context.state.cateSelected)
           context.dispatch('SELECT_PROJECT', data.pid)
@@ -53,10 +53,11 @@ export const project = {
       )
     },
     DELETE_PROJECT (context:any, PID:any) {
-      return ProjectService.deleteProject(PID).then(
+      return ProjectService.delete(PID).then(
         (response:any) => {
           context.dispatch('ALL_PROJECTS')
           context.dispatch('CATEGORY_SELECTED', context.state.cateSelected)
+          context.commit('DELETE_SUCCESS')
           return Promise.resolve(response.data)
         },
         (error:any) => {
@@ -66,7 +67,7 @@ export const project = {
       )
     },
     CATEGORY_SELECTED (context:any, category:any) {
-      return ProjectService.getProjectsByCat(category).then(
+      return ProjectService.projectCategory(category).then(
         (response:any) => {
           context.commit('SELECT_CATEGORY_SUCCESS', response.data.data)
           context.commit('WHAT_IS_CAT', category)
@@ -98,6 +99,7 @@ export const project = {
           return Promise.resolve(response.data.data)
         },
         (error:any) => {
+          console.log(error)
           return Promise.reject(error)
         }
       )
@@ -135,6 +137,10 @@ export const project = {
         state.CIDIsSelected = true
       }, 200)
     },
+    DELETE_SUCCESS (state:any) {
+      state.project = {}
+      state.PIDIsSelected = false
+    },
     SAVE_SHARE_PROJECT (state:any, payload:any) {
       state.shareProject = payload
     },
@@ -142,6 +148,7 @@ export const project = {
       state.CIDIsSelected = false
       state.PIDIsSelected = false
       state.cateSelected = ''
+      state.project = {}
       state.categories = []
     }
   }

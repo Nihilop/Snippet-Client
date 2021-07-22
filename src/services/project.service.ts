@@ -7,14 +7,14 @@ let SHARE_URL = ''
 
 if (DEV_MODE) {
   API_URL = 'http://localhost:4000/api/'
-  SHARE_URL = 'http://localhost:8080/'
+  SHARE_URL = 'http://localhost:4000/'
 } else {
   API_URL = 'https://api.nihilo.fr/api/'
   SHARE_URL = 'https://api.nihilo.fr/'
 }
 
 class ProjectService {
-  getAllProjects () {
+  myProjects () {
     return axios.get(API_URL + 'project/all', authHeader())
   }
 
@@ -26,19 +26,19 @@ class ProjectService {
     return axios.get(SHARE_URL + 'share/' + pid)
   }
 
-  createProject (data:any) {
+  create (data:any) {
     return axios.post(API_URL + 'project/create', data, authHeader())
   }
 
-  UpdateProject (data:any, PID:any) {
+  update (data:any, PID:any) {
     return axios.patch(API_URL + 'project/update/' + PID, data, authHeader())
   }
 
-  deleteProject (pid:any) {
+  delete (pid:any) {
     return axios.delete(API_URL + 'project/delete/' + pid, authHeader())
   }
 
-  getProjectsByCat (cid:any) {
+  projectCategory (cid:any) {
     return axios.get(API_URL + 'project/category/' + cid, authHeader())
   }
 }
